@@ -1,8 +1,7 @@
 """Arquivo de Controller da api de pessoas."""
+import logging
 import json
 import re
-import psycopg2
-import logging
 
 from dateutil.parser import parse 
 
@@ -12,6 +11,8 @@ from django.db import IntegrityError, connection
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+
+import psycopg2
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +59,7 @@ class PessoasApiView(View):
             return JsonResponse({'data': resultado}, status=200)
 
         except Exception as e:
-            logger.error(f"Erro ao selecionar pessoa(s): {str(e)}")
+            logger.error("Erro ao selecionar pessoa(s): %s", str(e))
             return JsonResponse({'Erro': 'Erro ao selecionar pessoa(s)'}, status=400)
 
     def post(self, request):
@@ -89,14 +90,9 @@ class PessoasApiView(View):
 
             with connection.cursor() as cursor:
                 try:
-                    cursor.callproc('inserir_pessoa',
-                                    [nome,
-                                     data_nascimento,
-                                     salario,
-                                     observacoes,
-                                     nome_mae,
-                                     nome_pai,
-                                     cpf])
+                    cursor.callproc('inserir_pessoa', [
+                        nome, data_nascimento, salario,
+                        observacoes, nome_mae, nome_pai, cpf])
                     id_pessoa = cursor.fetchone()[0]
                 except IntegrityError as e:
                     if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):
@@ -107,8 +103,8 @@ class PessoasApiView(View):
 
         except json.JSONDecodeError:
             return JsonResponse({'Erro': 'Formato de JSON inválido'}, status=400)
-        except Exception as e:
-            logger.error(f"Erro ao criar pessoa: {str(e)}")
+        except (TypeError, ValueError) as e:
+            logger.error("Erro ao criar pessoa: %s", str(e))
             return JsonResponse({'Erro': 'Erro ao criar pessoa'}, status=400)
 
     def put(self, request):
@@ -141,27 +137,23 @@ class PessoasApiView(View):
 
             with connection.cursor() as cursor:
                 try:
-                    cursor.callproc('atualizar_pessoa',
-                                    [id_pessoa,
-                                     nome,
-                                     data_nascimento,
-                                     salario,
-                                     observacoes,
-                                     nome_mae,
-                                     nome_pai,
-                                     cpf])
+                    cursor.callproc('atualizar_pessoa', [
+                        id_pessoa, nome, data_nascimento,
+                        salario, observacoes, nome_mae, nome_pai, cpf])
                     retorno = cursor.fetchone()[0]
                 except IntegrityError as e:
-                    logger.error(f"Erro ao atualizar pessoa: {str(e)}")
+                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):
+                        return JsonResponse({'Erro': 'Esse CPF já existe na base dados'}, status=400)
+                    logger.error("Erro ao atualizar pessoa: %s", str(e))
                     return JsonResponse({'Erro': 'Erro no processamento'}, status=400)
 
             return JsonResponse({'status': retorno}, status=200)
 
         except json.JSONDecodeError:
             return JsonResponse({'Erro': 'Formato de JSON inválido'}, status=400)
-        except Exception as e:
-            logger.error(f"Erro ao atualizar pessoa: {str(e)}")
-            return JsonResponse({'Erro': 'Erro ao atualizar dados da pessoa'}, status=400)
+        except (TypeError, ValueError) as e:
+            logger.error("Erro ao atualizar pessoa: %s", str(e))
+            return JsonResponse({'Erro': 'Erro ao atualizar pessoa'}, status=400)
 
     def delete(self, request):
         """Remove um registro de pessoa."""
@@ -182,14 +174,14 @@ class PessoasApiView(View):
                 try:
                     cursor.callproc('remover_pessoa', [id_pessoa])
                     retorno = cursor.fetchone()[0]
-                except Exception as e:
-                    logger.error(f"Erro ao remover pessoa: {str(e)}")
+                except (TypeError, ValueError) as e:
+                    logger.error("Erro ao remover pessoa: %s", str(e))
                     return JsonResponse({'Erro': 'Erro ao remover pessoa'}, status=400)
 
             return JsonResponse({'status': retorno}, status=200)
 
         except json.JSONDecodeError:
             return JsonResponse({'Erro': 'Formato de JSON inválido'}, status=400)
-        except Exception as e:
-            logger.error(f"Erro ao remover pessoa: {str(e)}")
-            return JsonResponse({'Erro': 'Erro ao remover pessoa', 'Detalhamento': str(e)}, status=400)
+        except (TypeError, ValueError) as e:
+            logger.error("Erro ao remover pessoa: %s", str(e))
+            return JsonResponse({'Erro': 'Erro ao remover pessoa'}, status=400)
