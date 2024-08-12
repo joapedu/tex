@@ -95,7 +95,9 @@ class PessoasApiView(View):
                     id_pessoa = cursor.fetchone()[0]
                 except IntegrityError as e:
                     if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):  # pylint: disable=no-member
-                        return JsonResponse({'Erro': 'Esse CPF já existe na base dados'}, status=400)
+                        return JsonResponse({
+                            'Erro': 'Esse CPF já existe na base dados'},
+                            status=400)
                     return JsonResponse({'Erro': 'Erro no processamento'}, status=400)
 
             return JsonResponse({'idPessoa': id_pessoa}, status=201)
