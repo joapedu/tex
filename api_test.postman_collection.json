@@ -1,0 +1,96 @@
+{
+    "info": {
+      "_postman_id": "unique-id",
+      "name": "API Test Collection",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "Criar Pessoa",
+        "request": {
+          "method": "POST",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"nome\": \"João Eduardo\",\"dataNascimento\": \"2003-05-12\",\"salario\": 3000.00,\"observacoes\": \"Observações aqui\",\"nomeMae\": \"Polyanna Braga\",\"nomePai\": \"Anderson Cruz\",\"cpf\": \"12345678901\"}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/api/pessoas/criar/",
+            "protocol": "http",
+            "host": ["127", "0", "0", "1"],
+            "port": "8000",
+            "path": ["api", "pessoas", "criar"]
+          }
+        }
+      },
+      {
+        "name": "Atualizar Pessoa",
+        "request": {
+          "method": "PUT",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"idPessoa\": 1,\"nome\": \"João Eduardo Atualizado\",\"dataNascimento\": \"2003-05-12\",\"salario\": 3500.00,\"observacoes\": \"Novas observações\",\"nomeMae\": \"Polyanna Braga\",\"nomePai\": \"Anderson Cruz\",\"cpf\": \"12345678901\"}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/api/pessoas/atualizar/",
+            "protocol": "http",
+            "host": ["127", "0", "0", "1"],
+            "port": "8000",
+            "path": ["api", "pessoas", "atualizar"]
+          }
+        }
+      },
+      {
+        "name": "Remover Pessoa",
+        "request": {
+          "method": "DELETE",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "type": "text"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\"idPessoa\": 1}"
+          },
+          "url": {
+            "raw": "http://127.0.0.1:8000/api/pessoas/remover/",
+            "protocol": "http",
+            "host": ["127", "0", "0", "1"],
+            "port": "8000",
+            "path": ["api", "pessoas", "remover"]
+          }
+        }
+      },
+      {
+        "name": "Selecionar Pessoas",
+        "request": {
+          "method": "GET",
+          "header": [],
+          "url": {
+            "raw": "http://127.0.0.1:8000/api/pessoas/",
+            "protocol": "http",
+            "host": ["127", "0", "0", "1"],
+            "port": "8000",
+            "path": ["api", "pessoas"]
+          }
+        }
+      }
+    ]
+  }
+  
