@@ -1,0 +1,9 @@
+.git
+.gitignore
+.docker
+.venv
+.env
+venv
+.pytest_cache
+.mypy_cache
+__pycache__
