@@ -83,22 +83,18 @@ class PessoasApiView(View):
                     'Detalhamento': validacoes_erros},
                     status=400)
 
-            nome = dados['nome']
-            data_nascimento = dados['dataNascimento']
-            salario = dados['salario']
-            observacoes = dados.get('observacoes', '')
-            nome_mae = dados['nomeMae']
-            nome_pai = dados['nomePai']
-            cpf = dados['cpf']
+            pessoa_params = [
+                dados['nome'], dados['dataNascimento'], dados['salario'],
+                dados.get('observacoes', ''), dados['nomeMae'], dados['nomePai'],
+                dados['cpf']
+            ]
 
             with connection.cursor() as cursor:
                 try:
-                    cursor.callproc('inserir_pessoa', [
-                        nome, data_nascimento, salario,
-                        observacoes, nome_mae, nome_pai, cpf])
+                    cursor.callproc('inserir_pessoa', pessoa_params)
                     id_pessoa = cursor.fetchone()[0]
                 except IntegrityError as e:
-                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation): # pylint: disable=no-member
+                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):  # pylint: disable=no-member
                         return JsonResponse({'Erro': 'Esse CPF já existe na base dados'}, status=400)
                     return JsonResponse({'Erro': 'Erro no processamento'}, status=400)
 
@@ -132,24 +128,21 @@ class PessoasApiView(View):
                     'Detalhamento': validacoes_erros},
                     status=400)
 
-            id_pessoa = dados['idPessoa']
-            nome = dados['nome']
-            data_nascimento = dados['dataNascimento']
-            salario = dados['salario']
-            observacoes = dados.get('observacoes', '')
-            nome_mae = dados['nomeMae']
-            nome_pai = dados['nomePai']
-            cpf = dados['cpf']
+            pessoa_params = [
+                dados['idPessoa'], dados['nome'], dados['dataNascimento'],
+                dados['salario'], dados.get('observacoes', ''),
+                dados['nomeMae'], dados['nomePai'], dados['cpf']
+            ]
 
             with connection.cursor() as cursor:
                 try:
-                    cursor.callproc('atualizar_pessoa', [
-                        id_pessoa, nome, data_nascimento,
-                        salario, observacoes, nome_mae, nome_pai, cpf])
+                    cursor.callproc('atualizar_pessoa', pessoa_params)
                     retorno = cursor.fetchone()[0]
                 except IntegrityError as e:
-                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation): # pylint: disable=no-member
-                        return JsonResponse({'Erro': 'Esse CPF já existe na base dados'}, status=400)
+                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):  # pylint: disable=no-member
+                        return JsonResponse({
+                            'Erro': 'Esse CPF já existe na base dados'},
+                            status=400)
                     logger.error("Erro ao atualizar pessoa: %s", str(e))
                     return JsonResponse({'Erro': 'Erro no processamento'}, status=400)
 
@@ -180,7 +173,8 @@ class PessoasApiView(View):
                 if not exists:
                     return JsonResponse(
                         {'Erro': 'Pessoa não encontrada',
-                         'Detalhamento': {'idPessoa': f'Nenhuma pessoa encontrada com ID {id_pessoa}'}
+                         'Detalhamento':
+                         {'idPessoa': f'Nenhuma pessoa encontrada com ID {id_pessoa}'}
                          }, status=404)
 
                 try:
