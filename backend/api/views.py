@@ -3,7 +3,7 @@ import logging
 import json
 import re
 
-from dateutil.parser import parse 
+from dateutil.parser import parse
 
 from django.http import JsonResponse
 from django.views import View
@@ -58,7 +58,7 @@ class PessoasApiView(View):
 
             return JsonResponse({'data': resultado}, status=200)
 
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             logger.error("Erro ao selecionar pessoa(s): %s", str(e))
             return JsonResponse({'Erro': 'Erro ao selecionar pessoa(s)'}, status=400)
 
@@ -78,7 +78,10 @@ class PessoasApiView(View):
             validacoes_erros = self.validar_entrada_dados(dados, campos_tipos)
 
             if validacoes_erros:
-                return JsonResponse({'Erro': 'Dados inválidos', 'Detalhamento': validacoes_erros}, status=400)
+                return JsonResponse({
+                    'Erro': 'Dados inválidos',
+                    'Detalhamento': validacoes_erros},
+                    status=400)
 
             nome = dados['nome']
             data_nascimento = dados['dataNascimento']
@@ -95,7 +98,7 @@ class PessoasApiView(View):
                         observacoes, nome_mae, nome_pai, cpf])
                     id_pessoa = cursor.fetchone()[0]
                 except IntegrityError as e:
-                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):
+                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation): # pylint: disable=no-member
                         return JsonResponse({'Erro': 'Esse CPF já existe na base dados'}, status=400)
                     return JsonResponse({'Erro': 'Erro no processamento'}, status=400)
 
@@ -124,7 +127,10 @@ class PessoasApiView(View):
             validacoes_erros = self.validar_entrada_dados(dados, campos_tipos)
 
             if validacoes_erros:
-                return JsonResponse({'Erro': 'Dados inválidos', 'Detalhamento': validacoes_erros}, status=400)
+                return JsonResponse({
+                    'Erro': 'Dados inválidos',
+                    'Detalhamento': validacoes_erros},
+                    status=400)
 
             id_pessoa = dados['idPessoa']
             nome = dados['nome']
@@ -142,7 +148,7 @@ class PessoasApiView(View):
                         salario, observacoes, nome_mae, nome_pai, cpf])
                     retorno = cursor.fetchone()[0]
                 except IntegrityError as e:
-                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation):
+                    if isinstance(e.__cause__, psycopg2.errors.UniqueViolation): # pylint: disable=no-member
                         return JsonResponse({'Erro': 'Esse CPF já existe na base dados'}, status=400)
                     logger.error("Erro ao atualizar pessoa: %s", str(e))
                     return JsonResponse({'Erro': 'Erro no processamento'}, status=400)
@@ -160,7 +166,10 @@ class PessoasApiView(View):
         try:
             dados = json.loads(request.body)
             if 'idPessoa' not in dados or dados['idPessoa'] in [None, '']:
-                return JsonResponse({'Erro': 'Dados inválidos', 'Detalhamento': {'idPessoa': 'idPessoa é obrigatório.'}}, status=400)
+                return JsonResponse(
+                    {'Erro': 'Dados inválidos',
+                     'Detalhamento': {'idPessoa': 'idPessoa é obrigatório.'}
+                     }, status=400)
 
             id_pessoa = dados['idPessoa']
 
@@ -169,7 +178,10 @@ class PessoasApiView(View):
                 exists = cursor.fetchone()[0]
 
                 if not exists:
-                    return JsonResponse({'Erro': 'Pessoa não encontrada', 'Detalhamento': {'idPessoa': f'Nenhuma pessoa encontrada com ID {id_pessoa}'}}, status=404)
+                    return JsonResponse(
+                        {'Erro': 'Pessoa não encontrada',
+                         'Detalhamento': {'idPessoa': f'Nenhuma pessoa encontrada com ID {id_pessoa}'}
+                         }, status=404)
 
                 try:
                     cursor.callproc('remover_pessoa', [id_pessoa])
