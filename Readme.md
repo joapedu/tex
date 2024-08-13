@@ -33,6 +33,7 @@ Ferramentas necessárias para rodar o projeto:
 ```sh
 docker-compose up --build
 ```
+> **OBS**: Caso esteja no Windows será necessário alterar os volumes presentes no _docker-compose.yml_.
 
 Esse comando irá compilar a imagem Docker e subir os contêineres para o Django e PostgreSQL, com base nas configurações definidas no [docker-compose.yml](./docker-compose.yml).
 
@@ -58,15 +59,19 @@ Ferramentas necessárias para rodar o projeto:
 
 ### Executando o Projeto Local:
 - Backend:
-    - na pasta _backend/_ rode o comando:
+    - na pasta _backend/_ rode os comandos:
     ```sh
+    python -m venv venv
+    venv/scripts/activate
+    pip install -r ../requirements.txt
     python manage.py runserver
     ```
 > Para visualizar as rotas do backend, acesse localhost:8000/api/
 
 - Frontend
-    - em outro terminal, na pasta _frontend/_ rode o comando:
+    - em outro terminal, na pasta _frontend/_ rode os comandos:
     ```sh
+    npm i
     npm start
     ```
 > Para visualizar a aplicação frontend acesse localhost:3000
