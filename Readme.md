@@ -1,16 +1,19 @@
-# 🎲 Tex 
+![](./public/data-tex-pequeno.png)
 
-## Projeto para gestão de pessoas com Django, PostgreSQL e Docker 🐳
+# Tex 
+
+## Projeto para gestão de pessoas com Django, PostgreSQL, React.ts e Docker 🐳
 
 <p float="left">
  <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white">
  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white">
  <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white">
+ <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white">
  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white">
 </p>
 
 ## Ideia: 💡
-Desenvolver uma API para gestão de pessoas, utilizando Django como framework backend, PostgreSQL como banco de dados relacional e Docker para gerenciar o ambiente de desenvolvimento e produção. O projeto também inclui um pipeline de CI/CD configurado no GitHub Actions para garantir a qualidade do código e facilitar o deploy.
+Desenvolver uma API para gestão de pessoas, utilizando Django como framework backend, PostgreSQL como banco de dados relacional e Docker para gerenciar o ambiente de desenvolvimento e produção. O projeto também inclui um pipeline de CI/CD configurado no GitHub Actions para garantir a qualidade do código e facilitar o deploy. Além disso, foi feito um frontend com intuito de ter uma visualização estética e agradável dos dados. 
 
 ## Executando o Projeto: 🚀
 Para executar o projeto em **modo de desenvolvimento** e visualizar sua operação, siga os passos abaixo.
@@ -32,6 +35,8 @@ docker-compose up --build
 ```
 
 Esse comando irá compilar a imagem Docker e subir os contêineres para o Django e PostgreSQL, com base nas configurações definidas no [docker-compose.yml](./docker-compose.yml).
+
+> O orquestrador possui apenas dois services (backend e db), ou seja o frontend, por ser algo a mais não esta dockerizado.
 
 ### Estrutura de pastas:
 ```
@@ -90,6 +95,39 @@ backend/
     ├── admin.py
     └── __init__.py
 
+frontend/
+├── .gitignore
+├── tsconfig.json
+├── README.md
+├── package.json
+├── package-lock.json
+├── src/
+│   ├── setupTests.ts
+│   ├── reportWebVitals.ts
+│   ├── react-app-env.d.ts
+│   ├── index.tsx
+│   ├── index.css
+│   ├── App.tsx
+│   ├── App.test.tsx
+│   ├── App.css
+│   ├── styles/
+│   │   └── theme.ts
+│   ├── services/
+│   │   └── api.ts
+│   ├── pages/
+│   │   ├── Listagem.tsx
+│   │   ├── Cadastro.tsx
+│   │   └── index.ts
+│   ├── components/
+│   │   ├── Sidebar.tsx
+│   │   ├── Loading.tsx
+│   │   ├── Header.tsx
+│   │   ├── FormModal.tsx
+│   │   ├── Footer.tsx
+│   │   ├── ConfirmDialog.tsx
+│   │   └── index.ts
+│   └── .gitignore
+
 .idea/
 ├── workspace.xml
 
@@ -117,6 +155,10 @@ backend/
     - django.yml: Executa o Django e roda os testes unitários, garantindo que o código esteja funcionando antes de um merge ou deploy.
     - pylint.yml: Verifica a conformidade do código com as boas práticas, prevenindo a introdução de código mal escrito.
 
+- Frontend com React e TypeScript:
+    - Componentização: O frontend é estruturado de maneira modular, com componentes reutilizáveis como Sidebar, Header, Footer, além de páginas específicas para Cadastro e Listagem.
+    - Validação com Yup: Os formulários no frontend utilizam Yup para validação robusta dos dados de entrada antes de enviá-los para a API.
+
 - Tratamento de Erros: Implementação de verificações robustas para identificar e tratar erros, com respostas informativas para o cliente da API.
 
 - Logging: Adiciona registros de log detalhados para depuração e monitoramento, especialmente útil em ambiente de produção.
@@ -126,7 +168,7 @@ backend/
 - Escalabilidade: Arquitetura preparada para escalar horizontalmente (adicionando mais instâncias do serviço) e verticalmente (melhorando a capacidade dos servidores), com foco na eficiência e modularidade.
 
 ### Links: 🌐
-- _Imagens utilizadas_:<br>
+- _Imagens Docker utilizadas_:<br>
 <ins> [Python image 3.10-slim](https://hub.docker.com/layers/library/python/3.10-slim/images/sha256-0d15918ecae76250659ae3036ad1fc898f801f6cb803860bdf0cc4b27fe316dc) </ins> <br>
 <ins> [Postgres image](https://hub.docker.com/_/postgres) </ins>
 
