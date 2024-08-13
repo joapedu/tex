@@ -1,9 +1,9 @@
 """Arquivo de settings do projeto"""
 import os
 import time
-import psycopg2
-
 from pathlib import Path
+
+import psycopg2
 from dotenv import load_dotenv
 from psycopg2 import OperationalError
 from django.db.utils import OperationalError as DjangoOperationalError
@@ -74,6 +74,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 def get_database_connection():
+    """Método de tentativa de conexão com banco."""
     max_retries = 5
     wait_time = 5
 
@@ -89,12 +90,17 @@ def get_database_connection():
             connection.close()
             return True
         except OperationalError:
-            print(f"Tentativa {attempt + 1} de {max_retries}: Banco de dados indisponível, esperando {wait_time} segundos antes de tentar novamente...")
+            print(
+                f"Tentativa {attempt + 1} de {max_retries}: "
+                f"Banco indisponvíel, {wait_time} segundos antes de tentar novamente."
+            )
             time.sleep(wait_time)
     return False
 
 if not get_database_connection():
-    raise DjangoOperationalError("Não foi possível conectar ao banco de dados após várias tentativas.")
+    raise DjangoOperationalError(
+        "Não foi possível conectar ao banco após várias tentativas."
+    )
 
 DATABASES = {
     'default': {
