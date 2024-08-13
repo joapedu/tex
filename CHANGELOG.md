@@ -6,23 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Latest]
+## [v0.0.2]
 
 ### Added
 
-- 
+- Camada de proteção a api com CORS
+- Criação de um frontend com cliente api para testes local
+- Logo oficial do projeto criado
 
 ### Changed
 
-- 
-
-### Fixed
-
--
-
-### Removed
-
-- 
+- Atualização da documentação com inserção do frontend
 
 ## [v0.0.1]
 
@@ -38,15 +32,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentação com licença, normas de contribuição e teste ao postman.
 - Controle de versão com changelog, seguindo princípios da Semantic Versioning.
 - Adição de variáveis de ambiente ao projeto para garantir segurança.
-
-### Changed
-
-- 
-
-### Fixed
-
--
-
-### Removed
-
-- 
