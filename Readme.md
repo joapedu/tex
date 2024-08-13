@@ -15,8 +15,8 @@
 ## Ideia: 💡
 Desenvolver uma API para gestão de pessoas, utilizando Django como framework backend, PostgreSQL como banco de dados relacional e Docker para gerenciar o ambiente de desenvolvimento e produção. O projeto também inclui um pipeline de CI/CD configurado no GitHub Actions para garantir a qualidade do código e facilitar o deploy. Além disso, foi feito um frontend com intuito de ter uma visualização estética e agradável dos dados. 
 
-## Executando o Projeto: 🚀
-Para executar o projeto em **modo de desenvolvimento** e visualizar sua operação, siga os passos abaixo.
+## Instruções Docker: 🐳
+Para executar o projeto em **modo de desenvolvimento** com Docker e visualizar a operação, siga os passos abaixo.
 
 ### Pré-requisitos:
 Ferramentas necessárias para rodar o projeto:
@@ -25,7 +25,7 @@ Ferramentas necessárias para rodar o projeto:
 - **Docker Compose** 🐳<br>
    [Guia de Instalação do Docker Compose](https://docs.docker.com/compose/install/).
   
-### Executando o Projeto:
+### Executando o Projeto com Docker:
 - Primeiro configure as variáveis de ambiente a partir do arquivo [*.env-exemplo*](./.env-exemplo)
 
 - Após isso, os comandos abaixo realizam a compilação e execução do projeto:
@@ -36,7 +36,40 @@ docker-compose up --build
 
 Esse comando irá compilar a imagem Docker e subir os contêineres para o Django e PostgreSQL, com base nas configurações definidas no [docker-compose.yml](./docker-compose.yml).
 
-> O orquestrador possui apenas dois services (backend e db), ou seja o frontend, por ser algo a mais não esta dockerizado.
+> O orquestrador possui apenas dois services (backend e db), ou seja o frontend, por ser algo além do solicitado, não foi dockerizado.
+
+> Para visualizar as rotas do backend, acesse localhost:8000/api/
+
+## Instruções Local: 🚀
+Para executar o projeto em **modo de desenvolvimento** localmente e visualizar a operação, siga os passos abaixo.
+
+### Pré-requisitos:
+Ferramentas necessárias para rodar o projeto:
+- **PostgreSQL**<br>
+   Baixe e instale o PostgreSQL no Windows a partir do [site oficial](https://www.postgresql.org/download/windows/).
+
+- **Instalar o psycopg2**<br>
+    O psycopg2 é o adaptador de banco de dados PostgreSQL mais popular para Python.
+    ```sh
+    pip install psycopg2-binary
+    ```
+
+> Após a configuração crie no seu banco as tabelas, colunas e as procedures dispostas em _scripts/*_
+
+### Executando o Projeto Local:
+- Backend:
+    - na pasta _backend/_ rode o comando:
+    ```sh
+    python manage.py runserver
+    ```
+> Para visualizar as rotas do backend, acesse localhost:8000/api/
+
+- Frontend
+    - em outro terminal, na pasta _frontend/_ rode o comando:
+    ```sh
+    npm start
+    ```
+> Para visualizar a aplicação frontend acesse localhost:3000
 
 ### Estrutura de pastas:
 ```
