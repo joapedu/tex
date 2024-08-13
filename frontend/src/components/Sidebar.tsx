@@ -20,10 +20,10 @@ const Sidebar = ({ isOpen }: { isOpen: boolean }) => {
     >
       <Box sx={{ mt: 8 }}>
         <List>
-          <ListItem button component={Link} to="/cadastro">
+          <ListItem button component={Link} to="/cadastro" sx={{mt: 2}}>
             <ListItemText primary="Cadastro" />
           </ListItem>
-          <ListItem button component={Link} to="/listagem">
+          <ListItem button component={Link} to="/listagem" sx={{mt: 2}}>
             <ListItemText primary="Listagem" />
           </ListItem>
         </List>
