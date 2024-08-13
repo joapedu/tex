@@ -1,7 +1,13 @@
 """Arquivo de settings do projeto"""
-from pathlib import Path
 import os
+import time
+import psycopg2
+
+from pathlib import Path
 from dotenv import load_dotenv
+from psycopg2 import OperationalError
+from django.db.utils import OperationalError as DjangoOperationalError
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,16 +73,41 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+def get_database_connection():
+    max_retries = 5
+    wait_time = 5
+
+    for attempt in range(max_retries):
+        try:
+            connection = psycopg2.connect(
+                dbname=os.environ.get('DB_NAME'),
+                user=os.environ.get('DB_USER'),
+                password=os.environ.get('DB_PASSWORD'),
+                host=os.environ.get('DB_HOST'),
+                port=os.environ.get('DB_PORT'),
+            )
+            connection.close()
+            return True
+        except OperationalError:
+            print(f"Tentativa {attempt + 1} de {max_retries}: Banco de dados indisponível, esperando {wait_time} segundos antes de tentar novamente...")
+            time.sleep(wait_time)
+    return False
+
+if not get_database_connection():
+    raise DjangoOperationalError("Não foi possível conectar ao banco de dados após várias tentativas.")
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'test_db'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+        'CONN_MAX_AGE': 0,
     }
 }
+
 
 LOGGING = {
     'version': 1,
